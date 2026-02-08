@@ -6,13 +6,12 @@
 *.zip
 *.tar.gz
 
-# ============= IDE和编辑器文件 =============
 # VS Code
 .vscode/*
-settings.json
-tasks.json
-launch.json
-extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
 # IntelliJ IDEA
 .idea/
@@ -36,7 +35,7 @@ build/
 !build/libs/*.jar
 
 # ============= 依赖管理 =============
-# Maven包装�?
+# Maven包装
 .mvn/wrapper/maven-wrapper.jar
 
 # ============= 操作系统文件 =============
@@ -71,7 +70,7 @@ logs/
 *.key
 *.crt
 
-# ============= 测试覆盖率报�?=============
+# ============= 测试覆盖率报告 ==============
 .coverage
 .coverage.*
 *.cover
