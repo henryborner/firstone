@@ -101,7 +101,7 @@ Write-Host "  [FILE] README.md" -ForegroundColor Gray
 $javaCodeContent = @'
 public class Main {
     public static void main(String[] args) {
-        System.out.println("🎉 Java project initialized successfully!");
+        System.out.println(" Java project initialized successfully!");
         System.out.println("Project: " + (args.length > 0 ? args[0] : "Unnamed"));
         System.out.println("Java version: " + System.getProperty("java.version"));
         System.out.println("Time: " + java.time.LocalDateTime.now());
@@ -136,7 +136,7 @@ foreach ($script in $scripts) {
     }
 }
 
-Write-Host "`n🎉 Project '$ProjectName' created successfully!" -ForegroundColor Green
+Write-Host "`n Project '$ProjectName' created successfully!" -ForegroundColor Green
 Write-Host "`nNext steps:" -ForegroundColor Yellow
 Write-Host "  1. cd $ProjectName" -ForegroundColor Gray
 Write-Host "  2. .\dev.ps1              # Start development assistant" -ForegroundColor Gray

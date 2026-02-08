@@ -171,15 +171,15 @@ public class $className {
 # Main menu
 function Show-Menu {
     Write-Host "`nSelect operation:" -ForegroundColor Yellow
-    Write-Host "1. 📝 Edit code" -ForegroundColor Cyan
-    Write-Host "2. 🔨 Compile project" -ForegroundColor Green
-    Write-Host "3. ▶️  Run program" -ForegroundColor Magenta
-    Write-Host "4. 🔄 Git sync" -ForegroundColor Blue
-    Write-Host "5. 📊 View status" -ForegroundColor White
-    Write-Host "6. 🧹 Clean project" -ForegroundColor DarkYellow
-    Write-Host "7. 🌐 Open GitHub" -ForegroundColor DarkCyan
-    Write-Host "8. 🛠️  Project management" -ForegroundColor DarkGreen
-    Write-Host "0. ❌ Exit" -ForegroundColor Red
+    Write-Host "1.  Edit code" -ForegroundColor Cyan
+    Write-Host "2.  Compile project" -ForegroundColor Green
+    Write-Host "3.  Run program" -ForegroundColor Magenta
+    Write-Host "4.  Git sync" -ForegroundColor Blue
+    Write-Host "5.  View status" -ForegroundColor White
+    Write-Host "6.  Clean project" -ForegroundColor DarkYellow
+    Write-Host "7.  Open GitHub" -ForegroundColor DarkCyan
+    Write-Host "8.  Project management" -ForegroundColor DarkGreen
+    Write-Host "0.  Exit" -ForegroundColor Red
     Write-Host ""
 }
 
