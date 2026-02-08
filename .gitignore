@@ -8,11 +8,11 @@
 
 # ============= IDE和编辑器文件 =============
 # VS Code
-.vscode/
-!.vscode/settings.json    # 但保留基本设置（可选）
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.vscode/*
+settings.json
+tasks.json
+launch.json
+extensions.json
 
 # IntelliJ IDEA
 .idea/
@@ -28,15 +28,15 @@
 # ============= 构建工具输出 =============
 # Maven
 target/
-!target/*.jar  # 但保留最终构建的jar（可选）
+!target/*.jar
 
 # Gradle
 .gradle/
 build/
-!build/libs/*.jar  # 但保留最终构建的jar（可选）
+!build/libs/*.jar
 
 # ============= 依赖管理 =============
-# Maven包装器
+# Maven包装�?
 .mvn/wrapper/maven-wrapper.jar
 
 # ============= 操作系统文件 =============
@@ -52,13 +52,13 @@ desktop.ini
 # ============= 日志文件 =============
 *.log
 logs/
-!logs/README.md  # 但保留说明文件（可选）
+!logs/README.md
 
 # ============= 本地配置文件 =============
 *.properties
 *.yml
 *.yaml
-!application.yml  # 但保留主配置文件（可选）
+!application.yml
 !application.properties
 
 # ============= 敏感文件 =============
@@ -71,7 +71,7 @@ logs/
 *.key
 *.crt
 
-# ============= 测试覆盖率报告 =============
+# ============= 测试覆盖率报�?=============
 .coverage
 .coverage.*
 *.cover
