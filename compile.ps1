@@ -74,17 +74,67 @@ if ($LASTEXITCODE -eq 0) {
     $classFiles = Get-ChildItem -Path $OutputDir -Filter "*.class" -Recurse
     if ($classFiles) {
         Write-Host "Generated $($classFiles.Count) class files:" -ForegroundColor Cyan
+    
         if ($Verbose) {
             $classFiles | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
-        } else {
-            $mainClasses = $classFiles | Where-Object { $_.Name -match ".*[Mm]ain.*" -or $_.Name -eq "App.class" }
-            if ($mainClasses) {
-                Write-Host "Runnable main classes:" -ForegroundColor Yellow
-                $mainClasses | ForEach-Object { Write-Host "  $($_.BaseName)" -ForegroundColor Green }
+        }
+        else {
+            # 显示所有非内部类的类文件
+            $normalClasses = $classFiles | Where-Object { $_.Name -notmatch '\$' }
+            if ($normalClasses.Count -gt 10) {
+                # 如果类太多，只显示前10个
+                Write-Host "Top 10 compiled classes:" -ForegroundColor Yellow
+                $normalClasses | Select-Object -First 10 | ForEach-Object { Write-Host "  $($_.BaseName)" -ForegroundColor Green }
+                if ($normalClasses.Count -gt 10) {
+                    Write-Host "  ... and $($normalClasses.Count - 10) more" -ForegroundColor Gray
+                }
+            }
+            else {
+                Write-Host "Compiled classes:" -ForegroundColor Yellow
+                $normalClasses | ForEach-Object { Write-Host "  $($_.BaseName)" -ForegroundColor Green }
             }
         }
+    
+        # 尝试检测具有main方法的类
+        Write-Host "`nDetecting main classes..." -ForegroundColor Cyan
+        $detectedMainClasses = @()
+    
+        # 检查常见的主类名
+        $commonMainClasses = @("App", "Main", "Application", "Start", "Program", "Jiecheng", "Calculator", "HelloWorld")
+    
+        foreach ($common in $commonMainClasses) {
+            if (Test-Path "$OutputDir\$common.class") {
+                $detectedMainClasses += $common
+            }
+        }
+    
+        # 检查其他类是否可能包含main方法（通过文件大小和名称模式）
+        if ($detectedMainClasses.Count -eq 0) {
+            # 寻找名称看起来像主类的文件（比如大写开头、不包含$、不是Test等）
+            $potentialMainClasses = $normalClasses | 
+            Where-Object { 
+                $_.BaseName -cmatch "^[A-Z]" -and # 大写开头（Java类约定）
+                $_.BaseName -notmatch "Test$" -and # 不是测试类
+                $_.BaseName -notmatch "[Tt]est" -and
+                $_.BaseName.Length -lt 30  # 名字不太长
+            } | 
+            Select-Object -First 5  # 只检查前5个
+            
+            foreach ($class in $potentialMainClasses) {
+                $detectedMainClasses += $class.BaseName
+            }
+        }
+    
+        if ($detectedMainClasses.Count -gt 0) {
+            Write-Host "Possible main classes (with main method):" -ForegroundColor Magenta
+            $detectedMainClasses | Sort-Object -Unique | ForEach-Object { 
+                Write-Host "  $_" -ForegroundColor Green 
+            }
+            Write-Host "`nRun with: .\run.ps1 -ClassName $_" -ForegroundColor Cyan
+        }
     }
-} else {
+}
+else {
     Write-Host "ERROR: Compilation failed" -ForegroundColor Red
     Write-Host "Error details:" -ForegroundColor Yellow
     $compileOutput

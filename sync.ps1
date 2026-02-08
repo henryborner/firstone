@@ -25,13 +25,15 @@ if (-not $NoPull) {
     Write-Host "`nPulling remote updates..." -ForegroundColor Yellow
     if ($Force) {
         git pull --rebase origin main
-    } else {
+    }
+    else {
         git pull origin main
     }
     
     if ($LASTEXITCODE -eq 0) {
         Write-Host "SUCCESS: Pull completed" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "WARNING: Pull failed or already up to date" -ForegroundColor Yellow
     }
 }
@@ -62,11 +64,13 @@ if ($changes) {
         if ($LASTEXITCODE -eq 0) {
             Write-Host "SUCCESS: Push completed!" -ForegroundColor Green
             Write-Host "Repository: https://github.com/henryborner/firstone" -ForegroundColor Cyan
-        } else {
+        }
+        else {
             Write-Host "ERROR: Push failed" -ForegroundColor Red
         }
     }
-} else {
+}
+else {
     Write-Host "No local changes to commit" -ForegroundColor Green
 }
 

@@ -29,7 +29,8 @@ function Invoke-Choice($choice) {
             Write-Host "`n[2] Compile project..." -ForegroundColor Green
             if (Test-Path ".\compile.ps1") {
                 .\compile.ps1
-            } else {
+            }
+            else {
                 if (!(Test-Path "bin")) { New-Item -ItemType Directory -Path "bin" -Force }
                 $javaFiles = Get-ChildItem -Path "src" -Filter "*.java" -Recurse
                 if ($javaFiles) {
@@ -37,7 +38,8 @@ function Invoke-Choice($choice) {
                     if ($LASTEXITCODE -eq 0) {
                         Write-Host "SUCCESS: Compiled successfully!" -ForegroundColor Green
                     }
-                } else {
+                }
+                else {
                     Write-Host "ERROR: No Java files found" -ForegroundColor Red
                 }
             }
@@ -45,12 +47,47 @@ function Invoke-Choice($choice) {
         "3" { 
             Write-Host "`n[3] Run program..." -ForegroundColor Magenta
             if (Test-Path ".\run.ps1") {
-                .\run.ps1
-            } else {
+                # 显示运行选项子菜单
+                Write-Host "`nRun options:" -ForegroundColor Yellow
+                Write-Host "  1. Interactive menu (choose from list)" -ForegroundColor Cyan
+                Write-Host "  2. Auto-find main class" -ForegroundColor Green
+                Write-Host "  3. Run specific class" -ForegroundColor Magenta
+                Write-Host "  4. Back to main menu" -ForegroundColor Gray
+        
+                $runChoice = Read-Host "Select run option (1-4)"
+        
+                switch ($runChoice) {
+                    "1" {
+                        # 交互式菜单
+                        .\run.ps1 -Interactive
+                    }
+                    "2" {
+                        # 自动查找
+                        .\run.ps1 -FindMain
+                    }
+                    "3" {
+                        # 运行特定类
+                        $className = Read-Host "Enter class name (e.g., Jiecheng, App)"
+                        if ($className) {
+                            .\run.ps1 -ClassName $className
+                        }
+                    }
+                    "4" {
+                        # 返回主菜单
+                        Write-Host "Returning to main menu..." -ForegroundColor Gray
+                    }
+                    default {
+                        Write-Host "Invalid choice, using interactive menu" -ForegroundColor Yellow
+                        .\run.ps1 -Interactive
+                    }
+                }
+            }
+            else {
                 $mainClass = "App"
                 if (Test-Path "bin\$mainClass.class") {
                     java -cp bin $mainClass
-                } else {
+                }
+                else {
                     Write-Host "ERROR: Please compile first" -ForegroundColor Red
                 }
             }
@@ -59,7 +96,8 @@ function Invoke-Choice($choice) {
             Write-Host "`n[4] Git sync..." -ForegroundColor Blue
             if (Test-Path ".\sync.ps1") {
                 .\sync.ps1
-            } else {
+            }
+            else {
                 git status
                 $doSync = Read-Host "Sync now? (y/n)"
                 if ($doSync -eq 'y') {
@@ -127,7 +165,8 @@ public class $className {
 }
 "@ | Out-File $filePath -Encoding UTF8
                             Write-Host "SUCCESS: Created $className.java" -ForegroundColor Green
-                        } else {
+                        }
+                        else {
                             Write-Host "ERROR: File already exists" -ForegroundColor Red
                         }
                     }
@@ -138,7 +177,8 @@ public class $className {
                         $indent = "  " * (($_.FullName.Split("\").Length - (Get-Location).Path.Split("\").Length) - 1)
                         if ($_.PSIsContainer) {
                             Write-Host "$indent[DIR] $($_.Name)/" -ForegroundColor DarkCyan
-                        } else {
+                        }
+                        else {
                             $color = switch ($_.Extension) {
                                 ".java" { "Green" }
                                 ".class" { "DarkGray" }
