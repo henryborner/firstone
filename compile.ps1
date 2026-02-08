@@ -1,4 +1,4 @@
-# compile.ps1 - Java Compilation Script
+# compile.ps1 - Java Compilation Script (Fixed Version)
 param(
     [string]$SourceDir = "src",
     [string]$OutputDir = "bin",
@@ -36,7 +36,7 @@ if (!$javaFiles) {
     Write-Host "ERROR: No Java files found in $SourceDir" -ForegroundColor Red
     Write-Host "Suggestions:" -ForegroundColor Yellow
     Write-Host "  1. Ensure Java files are in $SourceDir directory" -ForegroundColor Gray
-    Write-Host "  2. Use .\dev.ps1 to create new Java class" -ForegroundColor Gray
+    Write-Host "  2. Use .\dev.ps1 and select 8 then 1 to create new Java class" -ForegroundColor Gray
     exit 1
 }
 
@@ -44,23 +44,25 @@ Write-Host "Found $($javaFiles.Count) Java files" -ForegroundColor Green
 
 if ($Verbose) {
     Write-Host "File list:" -ForegroundColor Cyan
-    $javaFiles | ForEach-Object { Write-Host "  $($_.FullName)" -ForegroundColor Gray }
+    $javaFiles | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
 }
 
 # Compile
 Write-Host "`nCompiling..." -ForegroundColor Yellow
 $startTime = Get-Date
 
-# Create temporary file list
-$fileList = "$env:TEMP\javafiles_$(Get-Random).txt"
-$javaFiles.FullName | Out-File $fileList -Encoding UTF8
+# 使用正确的方法传递文件路径给 javac
+$filePaths = @()
+foreach ($file in $javaFiles) {
+    $filePaths += $file.FullName
+}
 
-# Execute compilation
-javac -d $OutputDir -cp $OutputDir "@$fileList" 2>&1 | Tee-Object -Variable compileOutput
+# 方法1：直接传递所有文件路径
+Write-Host "Executing: javac -d $OutputDir -cp $OutputDir (list of files)" -ForegroundColor Gray
+javac -d $OutputDir -cp $OutputDir @filePaths 2>&1 | Tee-Object -Variable compileOutput
 
 $endTime = Get-Date
 $duration = $endTime - $startTime
-Remove-Item $fileList -ErrorAction SilentlyContinue
 
 # Check result
 if ($LASTEXITCODE -eq 0) {
@@ -86,4 +88,13 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "ERROR: Compilation failed" -ForegroundColor Red
     Write-Host "Error details:" -ForegroundColor Yellow
     $compileOutput
+    
+    # 尝试备用方法
+    Write-Host "`nTrying alternative compilation method..." -ForegroundColor Yellow
+    Write-Host "Using simple javac command..." -ForegroundColor Gray
+    javac -d $OutputDir $javaFiles.FullName
+    
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "SUCCESS: Compiled using alternative method!" -ForegroundColor Green
+    }
 }
